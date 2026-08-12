@@ -1,0 +1,84 @@
+.home {
+  padding: 30px;
+}
+
+/* ---------- HERO ---------- */
+
+.hero {
+  background: linear-gradient(135deg, #0f172a, #1e3a8a);
+  color: white;
+
+  border-radius: 20px;
+
+  padding: 35px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 35px;
+  border-left: 8px solid #14b8a6;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.hero-left h1 {
+  font-size: 40px;
+
+  margin-bottom: 12px;
+}
+
+.hero-left p {
+  font-size: 18px;
+
+  opacity: 0.9;
+
+  max-width: 500px;
+
+  line-height: 1.6;
+}
+
+/* ---------- SUMMARY ---------- */
+
+.hero-right {
+  display: flex;
+
+  gap: 20px;
+}
+
+.summary-card {
+  background: rgba(255, 255, 255, 0.18);
+
+  backdrop-filter: blur(8px);
+
+  padding: 20px;
+
+  border-radius: 16px;
+
+  min-width: 180px;
+
+  text-align: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.summary-card h4 {
+  margin-bottom: 10px;
+
+  font-weight: 500;
+}
+
+.summary-card h2 {
+  font-size: 28px;
+}
+
+/* ---------- DASHBOARD ---------- */
+
+.dashboard-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 25px;
+}

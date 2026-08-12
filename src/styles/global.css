@@ -1,0 +1,32 @@
+/* Google Font is added in index.html */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* background: #f4fbf6; */
+  background: #f4f7fa;
+  font-family: "Poppins", sans-serif;
+  color: #2f3e35;
+  margin: 0;
+  padding-top: 120px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+}
