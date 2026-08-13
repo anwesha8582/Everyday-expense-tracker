@@ -2,13 +2,16 @@ import { useContext, useState } from "react";
 import { ExpenseContext } from "../../context/ExpenseContext";
 import { FaTrash, FaEdit, FaSave, FaTimes } from "react-icons/fa";
 import categories from "../../data/categories";
+import Icon from "../Common/Icon";
 import "./ExpenseList.css";
 
 function ExpenseList({ expenses }) {
   const { expenses: allExpenses, setExpenses } = useContext(ExpenseContext);
+
   // ID of the expense currently being edited
   const [editingId, setEditingId] = useState(null);
-  // Edit form values
+
+  // Edit form state
   const [editForm, setEditForm] = useState({
     title: "",
     amount: "",
@@ -16,9 +19,23 @@ function ExpenseList({ expenses }) {
     date: "",
   });
 
-  // =========================
+  // =====================================
+  // GET CATEGORY DATA
+  // =====================================
+
+  const getCategoryData = (categoryName) => {
+    return (
+      categories.find((category) => category.name === categoryName) || {
+        name: categoryName,
+        icon: "other",
+        color: "#64748B",
+      }
+    );
+  };
+
+  // =====================================
   // DELETE EXPENSE
-  // =========================
+  // =====================================
 
   const handleDelete = (id) => {
     const confirmDelete = window.confirm(
@@ -32,9 +49,9 @@ function ExpenseList({ expenses }) {
     setExpenses(updatedExpenses);
   };
 
-  // =========================
-  // START EDITING
-  // =========================
+  // =====================================
+  // START EDIT
+  // =====================================
 
   const handleEdit = (expense) => {
     setEditingId(expense.id);
@@ -47,31 +64,32 @@ function ExpenseList({ expenses }) {
     });
   };
 
-  // =========================
-  // HANDLE INPUT CHANGE
-  // =========================
+  // =====================================
+  // HANDLE EDIT INPUT
+  // =====================================
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
 
-    setEditForm({
-      ...editForm,
+    setEditForm((previous) => ({
+      ...previous,
       [name]: value,
-    });
+    }));
   };
 
-  // =========================
+  // =====================================
   // SAVE EDIT
-  // =========================
+  // =====================================
 
   const handleSave = (id) => {
     if (
       !editForm.title.trim() ||
       !editForm.amount ||
+      Number(editForm.amount) <= 0 ||
       !editForm.category ||
       !editForm.date
     ) {
-      alert("Please fill all fields.");
+      alert("Please fill all fields with valid values.");
       return;
     }
 
@@ -79,7 +97,7 @@ function ExpenseList({ expenses }) {
       if (expense.id === id) {
         return {
           ...expense,
-          title: editForm.title,
+          title: editForm.title.trim(),
           amount: Number(editForm.amount),
           category: editForm.category,
           date: editForm.date,
@@ -90,18 +108,13 @@ function ExpenseList({ expenses }) {
     });
 
     setExpenses(updatedExpenses);
-    setEditingId(null);
-    setEditForm({
-      title: "",
-      amount: "",
-      category: "",
-      date: "",
-    });
+
+    handleCancel();
   };
 
-  // =========================
+  // =====================================
   // CANCEL EDIT
-  // =========================
+  // =====================================
 
   const handleCancel = () => {
     setEditingId(null);
@@ -114,47 +127,31 @@ function ExpenseList({ expenses }) {
     });
   };
 
-  // =========================
-  // CATEGORY ICON
-  // =========================
-
-  const getCategoryIcon = (category) => {
-    switch (category) {
-      case "Grocery":
-        return "🛒";
-      case "Shopping":
-        return "🛍️";
-      case "Restaurant":
-        return "🍔";
-      case "Travel":
-        return "✈️";
-      case "Medical":
-        return "❤️";
-      case "Entertainment":
-        return "🎬";
-      default:
-        return "📦";
-    }
-  };
+  // =====================================
+  // DISPLAYED EXPENSES
+  // =====================================
 
   const displayedExpenses = expenses;
 
-  // =========================
+  // =====================================
   // EMPTY STATE
-  // =========================
+  // =====================================
 
   if (displayedExpenses.length === 0) {
     return (
       <div className="expense-list empty-state">
-        <h2>📭 No Expenses Found</h2>
-        <p>Try adding an expense or changing your search.</p>
+        <div className="empty-icon">📭</div>
+
+        <h2>No Expenses Found</h2>
+
+        <p>Try adding an expense or changing your search/filter.</p>
       </div>
     );
   }
 
-  // =========================
-  // TOTAL
-  // =========================
+  // =====================================
+  // TOTAL AMOUNT
+  // =====================================
 
   const totalAmount = displayedExpenses.reduce(
     (total, expense) => total + expense.amount,
@@ -163,7 +160,9 @@ function ExpenseList({ expenses }) {
 
   return (
     <div className="expense-list">
-      {/* Summary */}
+      {/* =====================================
+          SUMMARY
+      ===================================== */}
 
       <div className="summary-box">
         <div>
@@ -179,129 +178,179 @@ function ExpenseList({ expenses }) {
         </div>
       </div>
 
-      {/* Expense Cards */}
+      {/* =====================================
+          EXPENSE CARDS
+      ===================================== */}
 
-      {displayedExpenses.map((expense) => (
-        <div className="expense-card" key={expense.id}>
-          {editingId === expense.id ? (
-            /* =========================
-               EDIT FORM
-            ========================= */
+      {displayedExpenses.map((expense) => {
+        const categoryData = getCategoryData(expense.category);
 
-            <div className="edit-form">
-              <h3>✏️ Edit Expense</h3>
+        return (
+          <div className="expense-card" key={expense.id}>
+            {/* =================================
+                EDIT MODE
+            ================================= */}
 
-              <div className="edit-field">
-                <label>Expense Name</label>
+            {editingId === expense.id ? (
+              <div className="edit-form">
+                <div className="edit-form-header">
+                  <div>
+                    <h3>✏️ Edit Expense</h3>
 
-                <input
-                  type="text"
-                  name="title"
-                  value={editForm.title}
-                  onChange={handleEditChange}
-                />
-              </div>
+                    <p>Update your expense details.</p>
+                  </div>
+                </div>
 
-              <div className="edit-field">
-                <label>Amount</label>
+                {/* Expense Name */}
 
-                <input
-                  type="number"
-                  name="amount"
-                  value={editForm.amount}
-                  onChange={handleEditChange}
-                />
-              </div>
+                <div className="edit-field">
+                  <label>Expense Name</label>
 
-              <div className="edit-field">
-                <label>Category</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={editForm.title}
+                    onChange={handleEditChange}
+                    placeholder="Enter expense name"
+                  />
+                </div>
 
-                <select
-                  name="category"
-                  value={editForm.category}
-                  onChange={handleEditChange}
-                >
-                  {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                {/* Amount */}
 
-              <div className="edit-field">
-                <label>Date</label>
+                <div className="edit-field">
+                  <label>Amount</label>
 
-                <input
-                  type="date"
-                  name="date"
-                  value={editForm.date}
-                  onChange={handleEditChange}
-                />
-              </div>
+                  <div className="edit-amount-input">
+                    <span>₹</span>
 
-              <div className="edit-actions">
-                <button
-                  className="save-btn"
-                  onClick={() => handleSave(expense.id)}
-                >
-                  <FaSave />
-                  Save
-                </button>
+                    <input
+                      type="number"
+                      name="amount"
+                      value={editForm.amount}
+                      onChange={handleEditChange}
+                      placeholder="Enter amount"
+                    />
+                  </div>
+                </div>
 
-                <button className="cancel-btn" onClick={handleCancel}>
-                  <FaTimes />
-                  Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            /* =========================
-               NORMAL EXPENSE
-            ========================= */
+                {/* Category */}
 
-            <>
-              <div className="expense-left">
-                <span className="category-badge">
-                  {getCategoryIcon(expense.category)} {expense.category}
-                </span>
+                <div className="edit-field">
+                  <label>Category</label>
 
-                <h3>{expense.title}</h3>
-
-                <p className="expense-date">
-                  {new Date(expense.date).toLocaleDateString("en-IN", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </p>
-              </div>
-
-              <div className="expense-right">
-                <h2 className="amount">₹{expense.amount.toLocaleString()}</h2>
-
-                <div className="expense-actions">
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEdit(expense)}
-                    title="Edit Expense"
+                  <select
+                    name="category"
+                    value={editForm.category}
+                    onChange={handleEditChange}
                   >
-                    <FaEdit />
+                    {categories.map((category) => (
+                      <option key={category.name} value={category.name}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Date */}
+
+                <div className="edit-field">
+                  <label>Date</label>
+
+                  <input
+                    type="date"
+                    name="date"
+                    value={editForm.date}
+                    onChange={handleEditChange}
+                  />
+                </div>
+
+                {/* Buttons */}
+
+                <div className="edit-actions">
+                  <button
+                    type="button"
+                    className="save-btn"
+                    onClick={() => handleSave(expense.id)}
+                  >
+                    <FaSave />
+                    Save Changes
                   </button>
 
                   <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(expense.id)}
-                    title="Delete Expense"
+                    type="button"
+                    className="cancel-btn"
+                    onClick={handleCancel}
                   >
-                    <FaTrash />
+                    <FaTimes />
+                    Cancel
                   </button>
                 </div>
               </div>
-            </>
-          )}
-        </div>
-      ))}
+            ) : (
+              /* =================================
+                  NORMAL MODE
+              ================================= */
+
+              <>
+                <div className="expense-left">
+                  {/* Category */}
+
+                  <span
+                    className="category-badge"
+                    style={{
+                      "--category-color": categoryData.color,
+                    }}
+                  >
+                    <Icon name={categoryData.icon} />
+
+                    <span>{categoryData.name}</span>
+                  </span>
+
+                  {/* Title */}
+
+                  <h3>{expense.title}</h3>
+
+                  {/* Date */}
+
+                  <p className="expense-date">
+                    {new Date(expense.date).toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+
+                <div className="expense-right">
+                  <h2 className="amount">₹{expense.amount.toLocaleString()}</h2>
+
+                  <div className="expense-actions">
+                    <button
+                      type="button"
+                      className="edit-btn"
+                      onClick={() => handleEdit(expense)}
+                      title="Edit Expense"
+                      aria-label="Edit Expense"
+                    >
+                      <FaEdit />
+                    </button>
+
+                    <button
+                      type="button"
+                      className="delete-btn"
+                      onClick={() => handleDelete(expense.id)}
+                      title="Delete Expense"
+                      aria-label="Delete Expense"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

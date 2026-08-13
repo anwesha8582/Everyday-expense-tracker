@@ -1,19 +1,26 @@
-/* =========================
-   EXPENSE LIST CONTAINER
-========================= */
+/* =====================================================
+   EXPENSE LIST
+===================================================== */
 
 .expense-list {
-  background: #ffffff;
+  width: 100%;
+
   padding: 26px;
-  margin-top: 25px;
-  border-radius: 22px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
   border: 1px solid #edf1f1;
+
+  border-radius: 22px;
+
   box-shadow: 0 10px 35px rgba(15, 118, 110, 0.07);
 }
 
-/* =========================
+/* =====================================================
    SUMMARY
-========================= */
+===================================================== */
 
 .summary-box {
   display: grid;
@@ -65,9 +72,9 @@
   font-weight: 750;
 }
 
-/* =========================
+/* =====================================================
    EXPENSE CARD
-========================= */
+===================================================== */
 
 .expense-card {
   display: flex;
@@ -78,9 +85,13 @@
 
   gap: 25px;
 
+  width: 100%;
+
   padding: 21px 22px;
 
   margin-bottom: 12px;
+
+  box-sizing: border-box;
 
   background: #ffffff;
 
@@ -106,9 +117,9 @@
   box-shadow: 0 10px 25px rgba(15, 118, 110, 0.08);
 }
 
-/* =========================
+/* =====================================================
    LEFT SIDE
-========================= */
+===================================================== */
 
 .expense-left {
   min-width: 0;
@@ -121,21 +132,26 @@
 
   align-items: center;
 
-  gap: 5px;
+  gap: 6px;
 
   padding: 6px 11px;
 
   margin-bottom: 10px;
 
-  background: #ecfdf5;
+  background: color-mix(in srgb, var(--category-color) 10%, white);
 
-  color: #0f766e;
+  color: var(--category-color);
 
   border-radius: 999px;
 
   font-size: 12px;
 
   font-weight: 700;
+}
+
+.category-badge svg {
+  width: 14px;
+  height: 14px;
 }
 
 .expense-left h3 {
@@ -158,9 +174,9 @@
   font-size: 13px;
 }
 
-/* =========================
+/* =====================================================
    RIGHT SIDE
-========================= */
+===================================================== */
 
 .expense-right {
   display: flex;
@@ -168,6 +184,8 @@
   align-items: center;
 
   gap: 18px;
+
+  flex-shrink: 0;
 }
 
 .amount {
@@ -182,9 +200,9 @@
   white-space: nowrap;
 }
 
-/* =========================
-   ACTION BUTTONS
-========================= */
+/* =====================================================
+   ACTIONS
+===================================================== */
 
 .expense-actions {
   display: flex;
@@ -197,11 +215,13 @@
 .edit-btn,
 .delete-btn {
   width: 38px;
+
   height: 38px;
 
   display: flex;
 
   align-items: center;
+
   justify-content: center;
 
   border: none;
@@ -239,62 +259,50 @@
   transform: translateY(-2px);
 }
 
-/* =========================
-   EMPTY STATE
-========================= */
-
-.empty-state {
-  text-align: center;
-
-  padding: 60px 20px;
-}
-
-.empty-state h2 {
-  margin: 0 0 8px;
-
-  color: #374151;
-
-  font-size: 22px;
-}
-
-.empty-state p {
-  margin: 0;
-
-  color: #9ca3af;
-
-  font-size: 14px;
-}
-
-/* =========================
+/* =====================================================
    EDIT FORM
-========================= */
+===================================================== */
 
 .edit-form {
   width: 100%;
 }
 
-.edit-form h3 {
-  margin: 0 0 20px;
+.edit-form-header {
+  margin-bottom: 22px;
+}
+
+.edit-form-header h3 {
+  margin: 0 0 5px;
 
   color: #134e4a;
 
   font-size: 20px;
+
+  font-weight: 750;
 }
 
-/* =========================
+.edit-form-header p {
+  margin: 0;
+
+  color: #9ca3af;
+
+  font-size: 13px;
+}
+
+/* =====================================================
    EDIT FIELDS
-========================= */
+===================================================== */
 
 .edit-field {
   display: flex;
 
   flex-direction: column;
 
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
 .edit-field label {
-  margin-bottom: 6px;
+  margin-bottom: 7px;
 
   color: #374151;
 
@@ -323,7 +331,9 @@
 
   font-size: 14px;
 
-  transition: 0.25s;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .edit-field input:focus,
@@ -333,16 +343,62 @@
   box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
 }
 
-/* =========================
-   EDIT ACTIONS
-========================= */
+/* =====================================================
+   EDIT AMOUNT INPUT
+===================================================== */
+
+.edit-amount-input {
+  display: flex;
+
+  align-items: center;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.edit-amount-input:focus-within {
+  border-color: #14b8a6;
+
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+.edit-amount-input span {
+  padding-left: 12px;
+
+  color: #0f766e;
+
+  font-size: 16px;
+
+  font-weight: 700;
+}
+
+.edit-amount-input input {
+  border: none;
+
+  box-shadow: none;
+}
+
+.edit-amount-input input:focus {
+  box-shadow: none;
+}
+
+/* =====================================================
+   EDIT BUTTONS
+===================================================== */
 
 .edit-actions {
   display: flex;
 
   gap: 10px;
 
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 .save-btn,
@@ -367,13 +423,15 @@
 
   cursor: pointer;
 
-  transition: 0.2s;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .save-btn {
   background: #0f766e;
 
-  color: white;
+  color: #ffffff;
 }
 
 .save-btn:hover {
@@ -390,11 +448,71 @@
 
 .cancel-btn:hover {
   background: #e5e7eb;
+
+  transform: translateY(-1px);
 }
 
-/* =========================
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-state {
+  min-height: 240px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+.empty-icon {
+  width: 58px;
+
+  height: 58px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 15px;
+
+  background: #ecfdf5;
+
+  border-radius: 16px;
+
+  font-size: 28px;
+}
+
+.empty-state h2 {
+  margin: 0 0 7px;
+
+  color: #374151;
+
+  font-size: 21px;
+}
+
+.empty-state p {
+  max-width: 360px;
+
+  margin: 0;
+
+  color: #9ca3af;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+}
+
+/* =====================================================
    RESPONSIVE
-========================= */
+===================================================== */
 
 @media (max-width: 650px) {
   .expense-list {
@@ -414,20 +532,29 @@
   .expense-card {
     align-items: flex-start;
 
-    padding: 17px;
+    flex-direction: column;
 
-    gap: 15px;
+    gap: 16px;
+
+    padding: 18px;
   }
 
   .expense-right {
-    flex-direction: column;
+    width: 100%;
 
-    align-items: flex-end;
-
-    gap: 10px;
+    justify-content: space-between;
   }
 
   .amount {
-    font-size: 18px;
+    font-size: 19px;
+  }
+
+  .edit-actions {
+    flex-direction: column;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    width: 100%;
   }
 }

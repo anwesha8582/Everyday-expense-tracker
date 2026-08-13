@@ -19,8 +19,9 @@ function Reports() {
 
   const hasExpenses = expenses.length > 0;
 
+  // Find the largest category amount
   const maxCategoryAmount = Math.max(
-    ...categories.map((category) => categoryTotals[category] || 0),
+    ...categories.map((category) => categoryTotals[category.name] || 0),
     0,
   );
 
@@ -36,8 +37,6 @@ function Reports() {
 
           <p>Understand where your money is going.</p>
         </div>
-
-        {/* Period Filter */}
 
         <select
           className="report-period"
@@ -117,7 +116,12 @@ function Reports() {
       ========================= */}
 
       <div className="reports-visuals">
+        {/* DONUT */}
+
         <SpendingDonut period={period} />
+
+        {/* CATEGORY BREAKDOWN */}
+
         <div className="category-report">
           <div className="report-section-header">
             <div>
@@ -136,7 +140,7 @@ function Reports() {
           ) : (
             <div className="category-report-list">
               {categories.map((category) => {
-                const amount = categoryTotals[category] || 0;
+                const amount = categoryTotals[category.name] || 0;
 
                 const percentage =
                   totalExpense > 0 ? (amount / totalExpense) * 100 : 0;
@@ -147,10 +151,12 @@ function Reports() {
                     : 0;
 
                 return (
-                  <div className="category-report-item" key={category}>
+                  <div className="category-report-item" key={category.name}>
                     <div className="category-report-top">
                       <div>
-                        <span className="category-report-name">{category}</span>
+                        <span className="category-report-name">
+                          {category.name}
+                        </span>
 
                         <span className="category-report-percent">
                           {percentage.toFixed(1)}%
@@ -175,6 +181,11 @@ function Reports() {
           )}
         </div>
       </div>
+
+      {/* =========================
+          MONTHLY TREND
+      ========================= */}
+
       <MonthlySpendingChart period={period} />
     </div>
   );
