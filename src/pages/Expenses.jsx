@@ -2,11 +2,11 @@ import { useContext, useState } from "react";
 import { ExpenseContext } from "../context/ExpenseContext";
 import ExpenseList from "../components/ExpenseList/ExpenseList";
 import categories from "../data/categories";
+import { FcSearch } from "react-icons/fc";
 import "./Expenses.css";
 
 function Expenses() {
   const { expenses } = useContext(ExpenseContext);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
@@ -16,10 +16,8 @@ function Expenses() {
     const matchesSearch = expense.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-
     const matchesCategory =
       selectedCategory === "All" || expense.category === selectedCategory;
-
     return matchesSearch && matchesCategory;
   });
 
@@ -28,19 +26,15 @@ function Expenses() {
     if (sortBy === "newest") {
       return b.id - a.id;
     }
-
     if (sortBy === "oldest") {
       return a.id - b.id;
     }
-
     if (sortBy === "highest") {
       return b.amount - a.amount;
     }
-
     if (sortBy === "lowest") {
       return a.amount - b.amount;
     }
-
     return 0;
   });
 
@@ -57,7 +51,9 @@ function Expenses() {
       <div className="expense-toolbar">
         {/* Search */}
         <div className="search-box">
-          <span>🔍</span>
+          <span>
+            <FcSearch />
+          </span>
 
           <input
             type="text"

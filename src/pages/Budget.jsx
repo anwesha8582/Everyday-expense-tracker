@@ -3,26 +3,102 @@ import { ExpenseContext } from "../context/ExpenseContext";
 import "./Budget.css";
 
 function Budget() {
-  const { expenses, monthlyBudget, setMonthlyBudget } =
-    useContext(ExpenseContext);
+  const {
+    expenses,
+
+    getMonthlyBudget,
+
+    setMonthlyBudgetForMonth,
+  } = useContext(ExpenseContext);
+
+  // =====================================
+  // CURRENT MONTH
+  // =====================================
+
+  const today = new Date();
+
+  const currentMonth = `${today.getFullYear()}-${String(
+    today.getMonth() + 1,
+  ).padStart(2, "0")}`;
+
+  // =====================================
+  // SELECTED MONTH
+  // =====================================
+
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+
+  // =====================================
+  // BUDGET INPUT
+  // =====================================
 
   const [budgetInput, setBudgetInput] = useState("");
 
-  // Calculate total amount spent
-  const totalExpense = expenses.reduce(
+  // =====================================
+  // CURRENT SELECTED BUDGET
+  // =====================================
+
+  const selectedBudget = getMonthlyBudget(selectedMonth);
+
+  // =====================================
+  // SELECTED MONTH EXPENSES
+  // =====================================
+
+  const selectedMonthExpenses = expenses.filter((expense) => {
+    if (!expense.date) {
+      return false;
+    }
+
+    return expense.date.startsWith(selectedMonth);
+  });
+
+  // =====================================
+  // TOTAL SPENT
+  // =====================================
+
+  const totalExpense = selectedMonthExpenses.reduce(
     (total, expense) => total + expense.amount,
     0,
   );
 
-  // Calculate remaining budget
-  const budgetLeft = monthlyBudget - totalExpense;
+  // =====================================
+  // BUDGET LEFT
+  // =====================================
 
-  // Calculate percentage spent
+  const budgetLeft = Math.max(selectedBudget - totalExpense, 0);
+
+  // =====================================
+  // OVER BUDGET
+  // =====================================
+
+  const overBudget = Math.max(totalExpense - selectedBudget, 0);
+
+  const isOverBudget = totalExpense > selectedBudget;
+
+  // =====================================
+  // PROGRESS
+  // =====================================
+
   const percentageSpent =
-    monthlyBudget > 0 ? (totalExpense / monthlyBudget) * 100 : 0;
+    selectedBudget > 0 ? (totalExpense / selectedBudget) * 100 : 0;
 
-  // Keep progress between 0 and 100
   const progressPercentage = Math.min(percentageSpent, 100);
+
+  // =====================================
+  // MONTH LABEL
+  // =====================================
+
+  const formattedMonth = new Date(
+    Number(selectedMonth.split("-")[0]),
+    Number(selectedMonth.split("-")[1]) - 1,
+    1,
+  ).toLocaleDateString("en-IN", {
+    month: "long",
+    year: "numeric",
+  });
+
+  // =====================================
+  // UPDATE BUDGET
+  // =====================================
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,40 +107,66 @@ function Budget() {
 
     if (newBudget <= 0) {
       alert("Please enter a valid budget.");
+
       return;
     }
 
-    setMonthlyBudget(newBudget);
+    setMonthlyBudgetForMonth(selectedMonth, newBudget);
 
     setBudgetInput("");
   };
 
+  // =====================================
+  // RETURN
+  // =====================================
+
   return (
     <div className="budget-page">
-      {/* Header */}
+      {/* =========================
+          HEADER
+      ========================= */}
 
       <div className="budget-header">
-        <h1>💰 Budget</h1>
+        <div>
+          <h1>💰 Budget</h1>
 
-        <p>Set and manage your monthly spending budget.</p>
+          <p>Manage your budget month by month.</p>
+        </div>
+
+        {/* Month Selector */}
+
+        <input
+          className="budget-month-picker"
+          type="month"
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        />
       </div>
 
-      {/* Main Budget Card */}
+      {/* =========================
+          MAIN CARD
+      ========================= */}
 
       <div className="budget-card">
+        {/* Selected Month */}
+
+        <div className="selected-month-label">{formattedMonth}</div>
+
         {/* Current Budget */}
 
         <div className="current-budget">
           <span className="budget-icon">💵</span>
 
           <div>
-            <p>Current Monthly Budget</p>
+            <p>Monthly Budget</p>
 
-            <h2>₹{monthlyBudget.toLocaleString()}</h2>
+            <h2>₹{selectedBudget.toLocaleString()}</h2>
           </div>
         </div>
 
-        {/* Progress Section */}
+        {/* =========================
+            SPENDING
+        ========================= */}
 
         <div className="budget-progress-section">
           <div className="progress-header">
@@ -75,32 +177,48 @@ function Budget() {
             </div>
 
             <div>
-              <span>Remaining</span>
+              <span>{isOverBudget ? "Over Budget" : "Remaining"}</span>
 
-              <strong>₹{Math.max(budgetLeft, 0).toLocaleString()}</strong>
+              <strong className={isOverBudget ? "budget-danger" : ""}>
+                ₹{(isOverBudget ? overBudget : budgetLeft).toLocaleString()}
+              </strong>
             </div>
           </div>
 
+          {/* Progress */}
+
           <div className="progress-bar">
             <div
-              className="progress-fill"
+              className={
+                isOverBudget ? "progress-fill budget-overflow" : "progress-fill"
+              }
               style={{
                 width: `${progressPercentage}%`,
               }}
-            ></div>
+            />
           </div>
 
-          <p className="progress-text">
-            {percentageSpent.toFixed(1)}% of your budget spent
+          {/* Progress Text */}
+
+          <p
+            className={
+              isOverBudget ? "progress-text budget-danger" : "progress-text"
+            }
+          >
+            {isOverBudget
+              ? `Budget exceeded by ₹${overBudget.toLocaleString()}`
+              : `${percentageSpent.toFixed(1)}% of your budget spent`}
           </p>
         </div>
 
-        <div className="budget-divider"></div>
+        <div className="budget-divider" />
 
-        {/* Update Budget Form */}
+        {/* =========================
+            UPDATE FORM
+        ========================= */}
 
         <form onSubmit={handleSubmit}>
-          <label>Set New Monthly Budget</label>
+          <label>Set Budget for {formattedMonth}</label>
 
           <div className="budget-input-group">
             <span>₹</span>

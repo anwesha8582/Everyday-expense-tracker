@@ -1,81 +1,97 @@
-import { useContext } from "react";
-import { ExpenseContext } from "../../context/ExpenseContext";
-import DashboardCard from "./DashboardCard";
+import useExpenseStats from "../../hooks/useExpenseStats";
+import CategoryCarousel from "../CategoryCarousel/CategoryCarousel";
 import "./Dashboard.css";
 
 function Dashboard() {
-  const { expenses, monthlyBudget } = useContext(ExpenseContext);
-
-  // Calculate total expense
-  const totalExpense = expenses.reduce(
-    (total, expense) => total + expense.amount,
-    0,
-  );
-
-  // Calculate category total
-  const getCategoryTotal = (categoryName) => {
-    return expenses
-      .filter((expense) => expense.category === categoryName)
-      .reduce((total, expense) => total + expense.amount, 0);
-  };
-
-  const groceryTotal = getCategoryTotal("Grocery");
-  const shoppingTotal = getCategoryTotal("Shopping");
-  const restaurantTotal = getCategoryTotal("Restaurant");
-
-  // Calculate remaining budget
-  const budgetLeft = monthlyBudget - totalExpense;
-
-  // Dashboard card data
-  const dashboardData = [
-    {
-      id: 1,
-      icon: "wallet",
-      title: "Total Expense",
-      value: totalExpense,
-      color: "#F59E0B",
-    },
-    {
-      id: 2,
-      icon: "grocery",
-      title: "Grocery",
-      value: groceryTotal,
-      color: "#22C55E",
-    },
-    {
-      id: 3,
-      icon: "shopping",
-      title: "Shopping",
-      value: shoppingTotal,
-      color: "#A855F7",
-    },
-    {
-      id: 4,
-      icon: "restaurant",
-      title: "Restaurant",
-      value: restaurantTotal,
-      color: "#EF4444",
-    },
-    {
-      id: 5,
-      icon: "budget",
-      title: "Budget Left",
-      value: budgetLeft,
-      color: "#3B82F6",
-    },
-  ];
+  const {
+    monthlyBudget,
+    totalExpense,
+    budgetLeft,
+    overBudget,
+    isOverBudget,
+    spentPercentage,
+    remainingPercentage,
+  } = useExpenseStats();
 
   return (
-    <div className="dashboard-grid">
-      {dashboardData.map((card) => (
-        <DashboardCard
-          key={card.id}
-          icon={card.icon}
-          title={card.title}
-          value={card.value}
-          color={card.color}
-        />
-      ))}
+    <div className="dashboard">
+      <div className={`budget-progress ${isOverBudget ? "budget-over" : ""}`}>
+        <div className="budget-heading">
+          <div>
+            <span>Monthly Budget</span>
+            <h2>₹{monthlyBudget.toLocaleString()}</h2>
+          </div>
+          <div
+            className={`budget-status ${
+              isOverBudget
+                ? "status-danger"
+                : spentPercentage >= 80
+                  ? "status-warning"
+                  : "status-success"
+            }`}
+          >
+            {isOverBudget
+              ? "🚨 Budget exceeded"
+              : spentPercentage >= 80
+                ? "⚠️ Budget getting low"
+                : "✓ On track"}
+          </div>
+        </div>
+
+        <div className="budget-info">
+          <div className="spent-info">
+            <span>Spent</span>
+
+            <strong>₹{totalExpense.toLocaleString()}</strong>
+          </div>
+
+          <div
+            className={
+              isOverBudget
+                ? "remaining-info over-budget-info"
+                : "remaining-info"
+            }
+          >
+            <span>{isOverBudget ? "Over Budget" : "Remaining"}</span>
+
+            <strong>
+              ₹{(isOverBudget ? overBudget : budgetLeft).toLocaleString()}
+            </strong>
+          </div>
+        </div>
+
+        <div className="budget-bar">
+          <div
+            className={isOverBudget ? "spent-bar budget-overflow" : "spent-bar"}
+            style={{
+              width: `${spentPercentage}%`,
+            }}
+          />
+          {!isOverBudget && (
+            <div
+              className="remaining-bar"
+              style={{
+                width: `${remainingPercentage}%`,
+              }}
+            />
+          )}
+        </div>
+
+        <div className="budget-percentages">
+          <span>{spentPercentage.toFixed(1)}% spent</span>
+          <span>
+            {isOverBudget
+              ? "0% left"
+              : `${remainingPercentage.toFixed(1)}% left`}
+          </span>
+        </div>
+        {isOverBudget && (
+          <p className="overflow-message">
+            🚨 You have exceeded your budget by ₹{overBudget.toLocaleString()}
+          </p>
+        )}
+      </div>
+      <CategoryCarousel />
     </div>
   );
 }

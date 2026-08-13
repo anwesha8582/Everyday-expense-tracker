@@ -197,6 +197,103 @@
 
   font-weight: 700;
 }
+/* =========================
+   BUDGET HEADER
+========================= */
+
+.budget-header {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+/* =========================
+   MONTH PICKER
+========================= */
+
+.budget-month-picker {
+  padding: 11px 14px;
+
+  background: #ffffff;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 12px;
+
+  color: #374151;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  outline: none;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.budget-month-picker:focus {
+  border-color: #14b8a6;
+
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* =========================
+   SELECTED MONTH
+========================= */
+
+.selected-month-label {
+  margin-bottom: 18px;
+
+  color: #0f766e;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  text-transform: capitalize;
+}
+
+/* =========================
+   DANGER
+========================= */
+
+.budget-danger {
+  color: #dc2626 !important;
+}
+
+/* =========================
+   OVER BUDGET BAR
+========================= */
+
+.progress-fill.budget-overflow {
+  background: linear-gradient(90deg, #fecaca, #f87171, #dc2626);
+
+  box-shadow: 0 2px 10px rgba(220, 38, 38, 0.25);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .budget-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .budget-month-picker {
+    width: 100%;
+
+    box-sizing: border-box;
+  }
+}
 
 .budget-input-group input {
   width: 100%;

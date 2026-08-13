@@ -9,6 +9,7 @@
   gap: 30px;
   margin-bottom: 25px;
   border-left: 5px solid #14b8a6;
+  border-right: 5px solid #14b8a6;
   box-shadow: 0 6px 18px rgba(15, 118, 110, 0.08);
   box-sizing: border-box;
 }

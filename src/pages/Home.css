@@ -72,13 +72,3 @@
 .summary-card h2 {
   font-size: 28px;
 }
-
-/* ---------- DASHBOARD ---------- */
-
-.dashboard-grid {
-  display: grid;
-
-  grid-template-columns: repeat(2, 1fr);
-
-  gap: 25px;
-}

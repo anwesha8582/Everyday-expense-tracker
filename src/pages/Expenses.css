@@ -1,71 +1,92 @@
+/* =========================
+   EXPENSES PAGE
+========================= */
+
 .expenses-page {
   max-width: 1200px;
-  margin: 30px auto;
-  padding: 0 20px;
+  margin: 0 auto;
+  padding: 35px 30px 60px;
 }
 
+/* =========================
+   PAGE HEADER
+========================= */
+
 .page-header {
-  margin-bottom: 25px;
+  margin-bottom: 28px;
 }
 
 .page-header h1 {
-  font-size: 40px;
-  color: #1f2937;
-  margin-bottom: 10px;
+  margin: 0 0 8px;
+
+  color: #123b3a;
+
+  font-size: 38px;
+  font-weight: 750;
+
+  letter-spacing: -1px;
 }
 
 .page-header p {
+  margin: 0;
+
   color: #6b7280;
-  font-size: 17px;
+
+  font-size: 16px;
 }
 
 /* =========================
-   EXPENSE TOOLBAR
+   TOOLBAR
 ========================= */
 
 .expense-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+  display: grid;
+
+  grid-template-columns: minmax(300px, 1fr) 210px 190px;
+
+  gap: 14px;
 
   margin-bottom: 25px;
 }
 
 /* =========================
-   SEARCH
+   SEARCH BOX
 ========================= */
 
 .search-box {
-  flex: 1;
-
-  max-width: 550px;
-
   display: flex;
+
   align-items: center;
 
   gap: 10px;
 
-  background: white;
+  min-height: 48px;
+
+  box-sizing: border-box;
+
+  padding: 0 16px;
+
+  background: #ffffff;
 
   border: 1px solid #e5e7eb;
 
   border-radius: 14px;
 
-  padding: 12px 16px;
+  box-shadow: 0 4px 15px rgba(15, 118, 110, 0.05);
 
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-
-  transition: 0.3s;
+  transition: all 0.25s ease;
 }
 
 .search-box:focus-within {
   border-color: #14b8a6;
 
-  box-shadow: 0 5px 18px rgba(15, 157, 138, 0.15);
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.08);
 }
 
 .search-box span {
-  font-size: 20px;
+  font-size: 18px;
+
+  opacity: 0.65;
 }
 
 .search-box input {
@@ -77,9 +98,9 @@
 
   background: transparent;
 
-  font-size: 16px;
-
   color: #1f2937;
+
+  font-size: 15px;
 }
 
 .search-box input::placeholder {
@@ -87,89 +108,78 @@
 }
 
 /* =========================
-   CATEGORY FILTER
+   FILTERS
 ========================= */
 
-.category-filter {
-  min-width: 190px;
-
-  padding: 13px 15px;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 14px;
-
-  background: white;
-
-  color: #374151;
-
-  font-size: 15px;
-
-  font-weight: 500;
-
-  outline: none;
-
-  cursor: pointer;
-
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-
-  transition: 0.3s;
-}
-
-.category-filter:focus {
-  border-color: #14b8a6;
-
-  box-shadow: 0 5px 18px rgba(15, 157, 138, 0.15);
-}
-/* =========================
-   SORT FILTER
-========================= */
-
+.category-filter,
 .sort-filter {
-  min-width: 180px;
+  min-height: 48px;
 
-  padding: 13px 15px;
+  padding: 0 14px;
+
+  background: #ffffff;
 
   border: 1px solid #e5e7eb;
 
   border-radius: 14px;
 
-  background: white;
-
   color: #374151;
 
-  font-size: 15px;
+  font-size: 14px;
 
-  font-weight: 500;
+  font-weight: 600;
 
   outline: none;
 
   cursor: pointer;
 
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(15, 118, 110, 0.05);
 
-  transition: 0.3s;
+  transition: all 0.25s ease;
 }
 
+.category-filter:hover,
+.sort-filter:hover {
+  border-color: #99f6e4;
+}
+
+.category-filter:focus,
 .sort-filter:focus {
   border-color: #14b8a6;
 
-  box-shadow: 0 5px 18px rgba(15, 157, 138, 0.15);
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.08);
 }
+
 /* =========================
    MOBILE
 ========================= */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .expense-toolbar {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: 1fr 1fr;
   }
 
   .search-box {
-    max-width: none;
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .expenses-page {
+    padding: 25px 16px 45px;
   }
 
+  .page-header h1 {
+    font-size: 30px;
+  }
+
+  .expense-toolbar {
+    display: flex;
+
+    flex-direction: column;
+  }
+
+  .search-box,
   .category-filter,
   .sort-filter {
     width: 100%;

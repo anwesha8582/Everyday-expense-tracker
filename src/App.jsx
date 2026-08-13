@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Budget from "./pages/Budget";
 import AddExpense from "./pages/AddExpense";
 import Expenses from "./pages/Expenses";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/add-expense" element={<AddExpense />} />
         <Route path="/expenses" element={<Expenses />} />
         <Route path="/budget" element={<Budget />} />
+        <Route path="/reports" element={<Reports />} />
       </Routes>
     </>
   );

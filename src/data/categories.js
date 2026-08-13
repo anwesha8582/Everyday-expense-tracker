@@ -5,6 +5,12 @@ const categories = [
   "Travel",
   "Medical",
   "Entertainment",
+  "Bills & Utilities",
+  "Transportation",
+  "Education",
+  "Personal Care",
+  "Subscriptions",
+  "Other",
 ];
 
 export default categories;
